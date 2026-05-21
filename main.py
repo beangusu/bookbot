@@ -1,31 +1,32 @@
+import sys
 from stats import (
     word_count,
     char_count,
     sort_chars,
 )
 
-def get_book_text(path):
-    with open(path) as f:
+def get_booktext(filepath):
+    with open(filepath) as f:
         return f.read()
     
 def main():
-    book_path = "books/frankenstein.txt"
-    text = get_book_text(book_path)
-    num_words = word_count(text)
-    dictionary = char_count(text)
-    sorted_chars = sort_chars(dictionary)
-    print_report(book_path, num_words, sorted_chars)
-
-def print_report(book_path, word_count, sorted_chars):
+    if len(sys.argv) != 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
     print("============ BOOKBOT ============")
-    print(f"Analyzing book found at {book_path}...")
-    print("----------- Word Count ----------")
-    print(f"Found {word_count} total words")
-    print("--------- Character Count -------")
-    for item in sorted_chars:
-        if not item["char"].isalpha():
+    print(f"Analyzing book found at {sys.argv[1]}")
+    text = get_booktext(sys.argv[1])
+    print("---------- Word Count ----------")
+    word_count(text)
+    print("---------- Character Count -------")
+    dictionary = char_count(text)
+    sorted_list = sort_chars(dictionary)
+    for char in sorted_list:
+        if char["char"].isalpha():
+            print(f"{char['char']}: {char['num']}")
+        else:
             continue
-        print(f"{item['char']}: {item['num']}")
-    print("============= END ===============")
-
+    print("============== END ==============")
+    
 main()
+
